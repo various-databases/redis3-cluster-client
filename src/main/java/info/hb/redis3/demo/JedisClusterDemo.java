@@ -1,5 +1,8 @@
 package info.hb.redis3.demo;
 
+import info.hb.redis3.cluster.client.Redis3ClusterClient;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -7,12 +10,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
 
 public class JedisClusterDemo {
 
 	public static void main(String args[]) {
-		JedisCluster jc = RedisUtils.getCluster("192.168.32.199", 9020);
+		JedisCluster jc = Redis3ClusterClient.getCluster(9020, "192.168.32.199");
 
 		String key = "11name";
 		String result = jc.get(key);
@@ -24,7 +28,7 @@ public class JedisClusterDemo {
 
 	@Before
 	public void before() {
-		jc = RedisUtils.getCluster("192.168.32.199", 9020);
+		jc = getCluster("192.168.32.199", 9020);
 	}
 
 	@Test
@@ -100,6 +104,14 @@ public class JedisClusterDemo {
 		Set<String> result = jc.smembers(key);
 		System.out.println(result);
 		Assertions.assertThat(result).containsOnly(members);
+	}
+
+	public static JedisCluster getCluster(String host, int port) {
+		Set<HostAndPort> jedisClusterNodes = new HashSet<HostAndPort>();
+		jedisClusterNodes.add(new HostAndPort(host, port));
+		JedisCluster jedisCluster = new JedisCluster(jedisClusterNodes);
+
+		return jedisCluster;
 	}
 
 }

@@ -1,21 +1,23 @@
 package info.hb.redis3.demo;
 
+import info.hb.redis3.cluster.client.Redis3ClusterClient;
+
 import org.junit.Before;
 
 import redis.clients.jedis.JedisCluster;
 
-public class Test {
+public class LoopIODemo {
 	JedisCluster jc = null;
 
 	@Before
 	public void before() {
-		jc = RedisUtils.getCluster("192.168.32.199", 9020);
+		jc = Redis3ClusterClient.getCluster(9020, "192.168.32.199");
 
 	}
 
 	/**
 	 * 在一个无限循环中不停的读写
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	@org.junit.Test
@@ -29,8 +31,7 @@ public class Test {
 				String result = jc.get(key);
 				if (failureTime != 0 && recoveryTime == 0) {
 					recoveryTime = System.currentTimeMillis();
-					System.out.println("Cluster is recovered! Downtime lasted "
-							+ (recoveryTime - failureTime) + " ms");
+					System.out.println("Cluster is recovered! Downtime lasted " + (recoveryTime - failureTime) + " ms");
 				}
 
 				System.out.println(result);
@@ -44,4 +45,5 @@ public class Test {
 			Thread.sleep(1000);
 		}
 	}
+
 }
