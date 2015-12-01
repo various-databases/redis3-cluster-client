@@ -1,6 +1,6 @@
 package info.hb.redis3.cluster.client;
 
-import info.hb.redis3.cluster.pool.JedisPoolConfigDiy;
+import info.hb.redis3.cluster.pool.JedisPoolConfig;
 import info.hb.redis3.cluster.utils.RedisConfig;
 
 import java.util.HashSet;
@@ -38,19 +38,8 @@ public class Redis3ClusterClient {
 			nodes.add(new HostAndPort(ip, port));
 		}
 		jedisCluster = new JedisCluster(nodes, Integer.parseInt(props.getProperty("redis.timeout")),
-				new JedisPoolConfigDiy());
+				new JedisPoolConfig());
 		logger.info("Initing redis-cluster with Host:{}, Port:{}", ips, port);
-	}
-
-	/**
-	 * 测试函数
-	 */
-	public static void main(String[] args) {
-		Redis3ClusterClient client = new Redis3ClusterClient();
-		//		client.sadd("test", new String[] { "aaa", "bbb", "ccc" });
-		System.out.println(client.smember("test"));
-		System.out.println(client.spop("test"));
-		System.out.println(client.smember("test"));
 	}
 
 	/***********************集合操作命令*************************/
