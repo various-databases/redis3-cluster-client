@@ -2,6 +2,7 @@ package info.hb.redis3.demo;
 
 import info.hb.redis3.cluster.client.Redis3ClusterClient;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +16,7 @@ import redis.clients.jedis.JedisCluster;
 
 public class JedisClusterDemo {
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
 		JedisCluster jc = Redis3ClusterClient.getCluster(9020, "192.168.32.199");
 
 		String key = "11name";

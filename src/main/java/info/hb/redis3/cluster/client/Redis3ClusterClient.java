@@ -3,6 +3,7 @@ package info.hb.redis3.cluster.client;
 import info.hb.redis3.cluster.pool.JedisPoolConfig;
 import info.hb.redis3.cluster.utils.RedisConfig;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -37,8 +38,8 @@ public class Redis3ClusterClient {
 		for (String ip : ips.split(",")) {
 			nodes.add(new HostAndPort(ip, port));
 		}
-		jedisCluster = new JedisCluster(nodes, Integer.parseInt(props.getProperty("redis.timeout")),
-				new JedisPoolConfig());
+		jedisCluster = new JedisCluster(nodes,
+				Integer.parseInt(props.getProperty("redis.timeout")), new JedisPoolConfig());
 		logger.info("Initing redis-cluster with Host:{}, Port:{}", ips, port);
 	}
 
@@ -99,7 +100,11 @@ public class Redis3ClusterClient {
 	 * 关闭资源
 	 */
 	public void close() {
-		jedisCluster.close();
+		try {
+			jedisCluster.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }
